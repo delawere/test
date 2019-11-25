@@ -1,4 +1,4 @@
-import faker from "faker";
+import faker from 'faker';
 
 const nowDate = new Date();
 
@@ -50,15 +50,24 @@ export class WebsocketMockAdapter {
   constructor(subscriber, deelay = 1000) {
     this.subscriber = subscriber;
     this.deelay = deelay;
+    this.timerId = '';
 
     this.init();
   }
 
   init() {
-    setInterval(() => {
+    if (!this.subscriber) {
+      return;
+    }
+
+    this.timerId = setInterval(() => {
       this.subscriber(this.createData());
     }, this.deelay);
   }
+
+  removeSubscribe = timerId => {
+    clearInterval(timerId);
+  };
 
   createData() {
     const index = faker.random.number({ min: 0, max: 7 });
